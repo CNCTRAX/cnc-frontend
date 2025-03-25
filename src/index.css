@@ -2,13 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Full-screen black background */
+/* Full-screen background matching your design color */
 html, body, #root {
   height: 100%;
-  background-color: #000;  /* Sets the entire app's background to black */
+  background-color: #151319; /* Updated background color */
+  color: white; /* Optional - ensures text is white globally */
 }
 
 /* Optional - Remove default margin */
 body {
   margin: 0;
+}
+
+/* Ensure Safari/iOS safe area uses your background */
+body {
+  padding: env(safe-area-inset);
+  background-color: #151319;
 }
