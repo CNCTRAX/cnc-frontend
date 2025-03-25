@@ -68,7 +68,7 @@ const MachineSearch = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#151319] text-white flex flex-col items-center justify-center px-4 font-poppins relative">
+    <div className="min-h-screen bg-[#151319] text-white flex flex-col items-center justify-center px-4 py-[30px] font-poppins relative">
       {/* ✅ Profile Icon if logged in */}
       {token && (
         <div className="absolute top-6 right-8 flex items-center gap-3 text-white">
@@ -78,21 +78,28 @@ const MachineSearch = () => {
         </div>
       )}
 
-      <img src={logo} alt="CNC TRAX Logo" className="w-40 mb-4" />
-      <h2 className="text-xl font-semibold mb-6">Search CNC Machine</h2>
+      {/* ✅ Clickable Logo */}
+      <img
+        src={logo}
+        alt="CNC TRAX Logo"
+        className="w-40 mb-4 cursor-pointer"
+        onClick={() => navigate('/')}
+      />
 
-      {/* Search Input */}
-      <div className="flex items-center gap-4 w-full max-w-3xl mb-6">
+      <h2 className="text-xl font-semibold mb-6 text-center">Search CNC Machine</h2>
+
+      {/* ✅ Search Input - Mobile Friendly */}
+      <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-3xl mb-6">
         <input
           type="text"
           placeholder="Enter Serial Number"
           value={serialNumber}
           onChange={(e) => setSerialNumber(e.target.value)}
-          className="flex-grow rounded-full bg-[#212530] text-white px-6 py-3 focus:outline-none"
+          className="flex-grow rounded-full bg-[#212530] text-white px-6 py-3 focus:outline-none w-full"
         />
         <button
           onClick={handleSearch}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full w-full sm:w-auto"
         >
           Search
         </button>
@@ -103,7 +110,7 @@ const MachineSearch = () => {
 
       {/* Machine Details */}
       {machine && (
-        <div className="flex items-center justify-between bg-[#1a1d24] p-6 rounded-lg w-full max-w-4xl mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between bg-[#1a1d24] p-6 rounded-lg w-full max-w-4xl mb-6 gap-4">
           <div>
             <h3 className="text-lg font-semibold mb-2">Machine Details</h3>
             <p>
@@ -113,7 +120,7 @@ const MachineSearch = () => {
 
           <button
             onClick={handleBuyReport}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full text-sm"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full text-sm w-full md:w-auto"
           >
             Buy Full Report
           </button>
