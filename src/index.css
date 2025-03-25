@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Full-screen black background */
+html, body, #root {
+  height: 100%;
+  background-color: #000;  /* Sets the entire app's background to black */
+}
+
+/* Optional - Remove default margin */
+body {
+  margin: 0;
+}
