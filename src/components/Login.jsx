@@ -19,7 +19,6 @@ const Login = () => {
 
     try {
       const normalizedEmail = email.trim().toLowerCase();
-
       const response = await fetch(`${API}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -47,13 +46,13 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#151319] flex items-center justify-center font-poppins px-4 sm:px-8">
+    <div className="min-h-screen bg-[#151319] flex items-center justify-center font-poppins px-4 sm:px-8 py-[30px]">
       <div className="w-full max-w-md bg-[#1c1b22] p-8 rounded-3xl shadow-xl">
 
-        {/* ✅ Clickable Logo */}
-        <img 
-          src={logo} 
-          alt="CNC TRAX Logo" 
+        {/* ✅ Logo Navigates to Machine Search */}
+        <img
+          src={logo}
+          alt="CNC TRAX Logo"
           className="w-32 mx-auto mb-8 cursor-pointer"
           onClick={() => navigate('/search')}
         />
