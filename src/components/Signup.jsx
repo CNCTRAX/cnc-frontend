@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/cnctrax-logo.png';
 
-const API = process.env.REACT_APP_API_URL;
-
 const Signup = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -20,18 +18,12 @@ const Signup = () => {
     try {
       const normalizedEmail = email.trim().toLowerCase();
 
-      const response = await fetch(`${API}/signup-customer`, {
+      const response = await fetch('http://localhost:5000/signup-customer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          full_name: fullName.trim(),
-          email: normalizedEmail,
-          password,
-        }),
+        body: JSON.stringify({ full_name: fullName, email: normalizedEmail, password }),
       });
-
       const data = await response.json();
-
       if (response.ok) {
         navigate('/login');
       } else {
@@ -44,18 +36,12 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#151319] flex items-center justify-center font-poppins px-4 sm:px-8 py-[30px]">
+    <div className="min-h-screen bg-[#151319] flex items-center justify-center px-6 sm:px-8 py-[30px] font-poppins">
       <div className="w-full max-w-md bg-[#1c1b22] p-8 rounded-3xl shadow-xl">
 
-        {/* ✅ Logo goes to MachineSearch */}
-        <img
-          src={logo}
-          alt="CNC TRAX Logo"
-          className="w-32 mx-auto mb-8 cursor-pointer"
-          onClick={() => navigate('/')}
-        />
+        <img src={logo} alt="CNC TRAX Logo" className="w-32 mx-auto mb-8" />
 
-        <h2 className="text-white text-xl font-medium text-center mb-4">Sign Up</h2>
+        <h2 className="text-white text-xl font-medium text-center mb-2">Sign Up</h2>
         <p className="text-gray-400 text-center mb-6 text-sm">Join us today!</p>
 
         <form onSubmit={(e) => e.preventDefault()}>
@@ -97,8 +83,8 @@ const Signup = () => {
 
         {error && <p className="text-red-500 text-center mt-4">{error}</p>}
 
-        <p className="text-gray-500 text-xs text-center mt-6">
-          By signing up, you agree to our Terms and Conditions & Privacy Policy
+        <p className="text-gray-500 text-xs text-center mt-6 leading-relaxed">
+          By signing up, you agree to our Terms and Conditions <br /> & Privacy Policy
         </p>
 
         <div className="text-center mt-6">

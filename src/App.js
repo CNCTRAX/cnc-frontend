@@ -12,7 +12,8 @@ import './index.css'; // ✅ Tailwind CSS and custom styles
 
 function App() {
   return (
-    <div className="min-h-screen bg-black text-white w-full">
+    // ✅ Updated background color to match your design (#151319)
+    <div className="min-h-screen bg-[#151319] text-white w-full">
       <Router>
         <Routes>
           {/* ✅ Public Search */}
