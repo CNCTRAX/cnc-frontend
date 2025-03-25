@@ -19,6 +19,7 @@ const Login = () => {
 
     try {
       const normalizedEmail = email.trim().toLowerCase();
+
       const response = await fetch(`${API}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -40,52 +41,55 @@ const Login = () => {
         setError(data.error || 'Login failed. Please try again.');
       }
     } catch (err) {
-      setError('Failed to connect to the server. Please check your connection or URL.');
+      console.error('Login error:', err);
+      setError('An error occurred. Please try again.');
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#151319] flex items-center justify-center p-4 md:p-8 font-poppins">
-      <div className="w-full max-w-md md:max-w-lg lg:max-w-xl bg-[#1c1b22] p-6 sm:p-8 md:p-10 rounded-3xl shadow-xl">
-        
-        <img src={logo} alt="CNC TRAX Logo" className="w-24 sm:w-32 mx-auto mb-6 sm:mb-8" />
+    <div className="min-h-screen bg-[#151319] flex items-center justify-center font-poppins px-4 sm:px-8">
+      <div className="w-full max-w-md bg-[#1c1b22] p-8 rounded-3xl shadow-xl">
 
-        <h2 className="text-white text-lg sm:text-xl md:text-2xl font-semibold text-center mb-3">Welcome back</h2>
-        <p className="text-gray-400 text-center mb-6 text-sm sm:text-base">Log in to continue</p>
+        {/* ✅ Clickable Logo */}
+        <img 
+          src={logo} 
+          alt="CNC TRAX Logo" 
+          className="w-32 mx-auto mb-8 cursor-pointer"
+          onClick={() => navigate('/search')}
+        />
 
-        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
-          <div>
-            <label className="block text-gray-400 text-sm mb-2">Email</label>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 rounded-lg bg-[#2a2930] text-white focus:outline-none"
-            />
-          </div>
+        <h2 className="text-white text-xl font-medium text-center mb-4">Welcome back</h2>
+        <p className="text-gray-400 text-center mb-6 text-sm">Log in to continue</p>
 
-          <div>
-            <label className="block text-gray-400 text-sm mb-2">Password</label>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 rounded-lg bg-[#2a2930] text-white focus:outline-none"
-            />
-          </div>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <label className="block text-gray-400 text-sm mb-2">Email</label>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-3 rounded-lg bg-[#2a2930] text-white mb-6 focus:outline-none"
+          />
+
+          <label className="block text-gray-400 text-sm mb-2">Password</label>
+          <input
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-3 rounded-lg bg-[#2a2930] text-white mb-6 focus:outline-none"
+          />
 
           <button
             type="button"
             onClick={handleLogin}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-full font-medium transition duration-200"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-full font-medium"
           >
             Continue
           </button>
         </form>
 
-        {error && <p className="text-red-500 text-center mt-4 text-sm sm:text-base">{error}</p>}
+        {error && <p className="text-red-500 text-center mt-4">{error}</p>}
 
         <div className="text-center mt-6">
           <p className="text-gray-400 text-sm">

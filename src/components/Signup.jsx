@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/cnctrax-logo.png';
 
-// ✅ Pull API URL from .env
 const API = process.env.REACT_APP_API_URL;
 
 const Signup = () => {
@@ -21,7 +20,6 @@ const Signup = () => {
     try {
       const normalizedEmail = email.trim().toLowerCase();
 
-      // ✅ Use full API endpoint dynamically
       const response = await fetch(`${API}/signup-customer`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -46,9 +44,16 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#151319] flex items-center justify-center font-poppins">
+    <div className="min-h-screen bg-[#151319] flex items-center justify-center font-poppins px-4 sm:px-8">
       <div className="w-full max-w-md bg-[#1c1b22] p-8 rounded-3xl shadow-xl">
-        <img src={logo} alt="CNC TRAX Logo" className="w-32 mx-auto mb-8" />
+
+        {/* ✅ Clickable Logo */}
+        <img
+          src={logo}
+          alt="CNC TRAX Logo"
+          className="w-32 mx-auto mb-8 cursor-pointer"
+          onClick={() => navigate('/search')}
+        />
 
         <h2 className="text-white text-xl font-medium text-center mb-4">Sign Up</h2>
         <p className="text-gray-400 text-center mb-6 text-sm">Join us today!</p>
