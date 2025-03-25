@@ -47,12 +47,12 @@ const Signup = () => {
     <div className="min-h-screen bg-[#151319] flex items-center justify-center font-poppins px-4 sm:px-8 py-[30px]">
       <div className="w-full max-w-md bg-[#1c1b22] p-8 rounded-3xl shadow-xl">
 
-        {/* ✅ Logo Navigates to Machine Search */}
+        {/* ✅ Logo goes to MachineSearch */}
         <img
           src={logo}
           alt="CNC TRAX Logo"
           className="w-32 mx-auto mb-8 cursor-pointer"
-          onClick={() => navigate('/search')}
+          onClick={() => navigate('/')}
         />
 
         <h2 className="text-white text-xl font-medium text-center mb-4">Sign Up</h2>
