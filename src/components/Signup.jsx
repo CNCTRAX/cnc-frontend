@@ -20,7 +20,7 @@ const Signup = () => {
     try {
       const normalizedEmail = email.trim().toLowerCase();
 
-      const response = await fetch('${API}/signup-customer', {
+      const response = await fetch(`${API}/signup-customer`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ full_name: fullName, email: normalizedEmail, password }),
