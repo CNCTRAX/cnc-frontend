@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/cnctrax-logo.png';
 
+const API = process.env.REACT_APP_API_URL;
+
 const Signup = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -18,7 +20,7 @@ const Signup = () => {
     try {
       const normalizedEmail = email.trim().toLowerCase();
 
-      const response = await fetch('http://localhost:5000/signup-customer', {
+      const response = await fetch('${API}/signup-customer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ full_name: fullName, email: normalizedEmail, password }),
