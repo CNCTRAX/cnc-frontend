@@ -1,21 +1,18 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import logo from "../assets/cnctrax-logo.png";
 
 const API = process.env.REACT_APP_API_URL;
 
-function AuthForm({ setToken }) {
+function AuthForm({ setToken, initialMode = 'login', redirectTo = '/machine-search' }) {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(initialMode === 'login');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [role, setRole] = useState("customer");
   const [message, setMessage] = useState("");
-
-  const searchParams = new URLSearchParams(location.search);
-  const redirectTo = searchParams.get("redirectTo") || "/machine-search";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,14 +43,13 @@ function AuthForm({ setToken }) {
         const decoded = jwtDecode(data.token);
         console.log("✅ Login success. Redirecting to:", redirectTo);
         if (decoded.role === "customer") {
-          navigate(redirectTo); // ✅ Use redirectTo param
+          navigate(redirectTo);
         } else {
           setMessage("Access denied. Please use the technician login.");
         }
       } else if (!isLogin && response.status === 201) {
         console.log("✅ Signup successful. Logging in...");
 
-        // Auto-login right after signup
         const loginResponse = await fetch(`${API}/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -69,7 +65,7 @@ function AuthForm({ setToken }) {
           const decoded = jwtDecode(loginData.token);
           console.log("✅ Auto-login success. Redirecting to:", redirectTo);
           if (decoded.role === "customer") {
-            navigate(redirectTo); // ✅ Go back to machine search with serial
+            navigate(redirectTo);
           } else {
             setMessage("Access denied. Please use the technician login.");
           }
@@ -86,69 +82,87 @@ function AuthForm({ setToken }) {
   };
 
   return (
-    <div className="auth-container text-white p-8 max-w-md mx-auto bg-[#1c1b22] rounded-2xl shadow-lg">
-      <h2 className="text-xl font-bold mb-6">{isLogin ? "Login" : "Sign Up"}</h2>
+    <div className="min-h-screen bg-[#151319] flex items-center justify-center px-6 sm:px-8 py-[30px] font-poppins">
+      <div className="w-full max-w-md bg-[#1c1b22] p-8 rounded-3xl shadow-xl">
+        <img src={logo} alt="CNC TRAX Logo" className="w-32 mx-auto mb-8" />
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {!isLogin && (
+        <h2 className="text-white text-xl font-medium text-center mb-2">
+          {isLogin ? "Welcome back" : "Sign Up"}
+        </h2>
+        <p className="text-gray-400 text-center mb-6 text-sm">
+          {isLogin ? "Log in to continue" : "Join us today!"}
+        </p>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {!isLogin && (
+            <input
+              type="text"
+              placeholder="Full Name"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              required
+              className="w-full p-3 rounded-lg bg-[#2a2930] text-white"
+            />
+          )}
+
           <input
-            type="text"
-            placeholder="Full Name"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full p-3 rounded bg-[#2a2930] text-white"
+            className="w-full p-3 rounded-lg bg-[#2a2930] text-white"
           />
-        )}
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="w-full p-3 rounded bg-[#2a2930] text-white"
-        />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="w-full p-3 rounded-lg bg-[#2a2930] text-white"
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="w-full p-3 rounded bg-[#2a2930] text-white"
-        />
+          {!isLogin && (
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full p-3 rounded-lg bg-[#2a2930] text-white"
+            >
+              <option value="customer">Customer</option>
+              <option value="technician">Technician</option>
+            </select>
+          )}
 
-        {!isLogin && (
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="w-full p-3 rounded bg-[#2a2930] text-white"
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-full font-medium"
           >
-            <option value="customer">Customer</option>
-            <option value="technician">Technician</option>
-          </select>
-        )}
+            {isLogin ? "Login" : "Continue"}
+          </button>
+        </form>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded"
-        >
-          {isLogin ? "Login" : "Register"}
-        </button>
-      </form>
+        {message && <p className="text-green-400 text-center mt-4">{message}</p>}
 
-      <p className="text-green-400 mt-4">{message}</p>
+        <p className="text-gray-500 text-xs text-center mt-6 leading-relaxed">
+          By signing up, you agree to our Terms and Conditions <br /> & Privacy Policy
+        </p>
 
-      <button
-        onClick={() => {
-          setIsLogin(!isLogin);
-          setMessage("");
-        }}
-        className="mt-6 text-blue-400 hover:underline"
-      >
-        {isLogin ? "Need an account? Sign Up" : "Already have an account? Login"}
-      </button>
+        <div className="text-center mt-6">
+          <p className="text-gray-400 text-sm">
+            {isLogin ? "Don’t have an account?" : "Already have an account?"}{" "}
+            <button
+              onClick={() => {
+                setIsLogin(!isLogin);
+                setMessage("");
+              }}
+              className="text-blue-400 hover:underline"
+            >
+              {isLogin ? "Sign up" : "Log in"}
+            </button>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
