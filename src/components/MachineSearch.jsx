@@ -71,8 +71,8 @@ const MachineSearch = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#151319] text-white flex flex-col items-center justify-center px-4 py-[30px] font-poppins relative">
-      {/* ✅ Clickable Logo */}
+    <div className="min-h-screen bg-[#151319] text-white flex flex-col items-center justify-center px-4 py-10 sm:py-12 font-poppins relative">
+      {/* ✅ Logo */}
       <img
         src={logo}
         alt="CNC TRAX Logo"
@@ -82,7 +82,7 @@ const MachineSearch = () => {
 
       <h2 className="text-xl font-semibold mb-6 text-center">Search CNC Machine</h2>
 
-      {/* ✅ Serial Input + Search */}
+      {/* ✅ Search Input */}
       <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-3xl mb-6">
         <input
           type="text"
@@ -101,7 +101,7 @@ const MachineSearch = () => {
 
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
-      {/* ✅ Results */}
+      {/* ✅ Machine Info */}
       {machine && (
         <div className="flex flex-col md:flex-row md:items-center justify-between bg-[#1a1d24] p-6 rounded-lg w-full max-w-4xl mb-6 gap-4">
           <div>
@@ -120,11 +120,11 @@ const MachineSearch = () => {
         </div>
       )}
 
-      {/* ✅ Technician Access moved up */}
-      <hr className="border-gray-600 w-full max-w-3xl mb-6" />
-      <div className="mt-8 flex flex-col items-center gap-3 text-blue-400">
-        <span className="text-gray-400">Technician Access</span>
-        <div className="flex gap-8">
+      {/* ✅ Technician Access (moved and tightened) */}
+      <hr className="border-gray-600 w-full max-w-3xl mb-4 sm:mb-6" />
+      <div className="mt-4 sm:mt-6 flex flex-col items-center gap-2 sm:gap-3 text-blue-400">
+        <span className="text-gray-400 text-sm sm:text-base">Technician Access</span>
+        <div className="flex gap-4 sm:gap-8 text-sm sm:text-base">
           <a href="/tech-login" className="hover:underline">Technician Login</a>
           <a href="/tech-signup" className="hover:underline">Technician Sign Up</a>
         </div>
