@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 import logo from '../assets/cnctrax-logo.png';
 
 const API = process.env.REACT_APP_API_URL;
@@ -8,18 +9,15 @@ const MachineSearch = () => {
   const [serialNumber, setSerialNumber] = useState('');
   const [machine, setMachine] = useState(null);
   const [error, setError] = useState('');
-  const [token, setToken] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
+  const { token } = useAuth(); // ✅ grab token from context
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    if (storedToken) setToken(storedToken);
-
     const params = new URLSearchParams(location.search);
     const serialFromUrl = params.get('serial');
     if (serialFromUrl) setSerialNumber(serialFromUrl);
-  }, [location.search]); // ✅ included location.search
+  }, [location.search]);
 
   const handleSearch = async () => {
     if (!serialNumber.trim()) {
@@ -74,14 +72,7 @@ const MachineSearch = () => {
 
   return (
     <div className="min-h-screen bg-[#151319] text-white flex flex-col items-center justify-center px-4 py-[30px] font-poppins relative">
-      {token && (
-        <div className="absolute top-6 right-8 flex items-center gap-3 text-white">
-          <div className="bg-gray-600 rounded-full w-10 h-10 flex items-center justify-center">
-            👤
-          </div>
-        </div>
-      )}
-
+      {/* ✅ Clickable Logo */}
       <img
         src={logo}
         alt="CNC TRAX Logo"
