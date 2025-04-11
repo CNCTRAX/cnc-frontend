@@ -1,0 +1,64 @@
+[
+  {
+    "id": 101,
+    "paid": true,
+    "machine_id": "VF3-HAAS-2024",
+    "machine_brand": "Haas Automation",
+    "machine_model": "VF-3",
+    "serial_number": "3087654",
+    "year": 2018,
+    "location": "Scottsdale, Arizona",
+    "runtime_hours": 8750,
+    "previous_owners": "Contact us for more ownership info",
+    "main_photo_url": "https://your-s3-bucket.s3.amazonaws.com/vf3-main.jpg",
+    "spec_summary": "This 2018 Haas VF-3 is a high-performance vertical machining center designed for precision and efficiency.",
+    "key_specs": [
+      { "label": "Spindle Power", "value": "30 HP (22.4 kW)" },
+      { "label": "Table Size", "value": "48\\" x 18\\"" },
+      { "label": "Max Table Load", "value": "3,500 lbs" },
+      { "label": "Control System", "value": "Haas NextGen CNC Control" },
+      { "label": "Machine Weight", "value": "12,500 lbs" },
+      { "label": "Work Envelope", "value": "121\\" x 118\\" x 122\\"" }
+    ],
+    "upgrades": [
+      "Through-Spindle Coolant (TSC): 300 PSI high-pressure system",
+      "Probing System: Haas Wireless Intuitive Probing",
+      "Chip Conveyor: Haas Conveyor System",
+      "Programmable Coolant Nozzle",
+      "Rigid Tapping Enabled",
+      "High-Speed Machining Mode",
+      "4th-Axis Ready"
+    ],
+    "maintenance_summary": "Regular preventative maintenance performed.",
+    "maintenance": [
+      "June 2023: Routine maintenance, spindle check, coolant flush",
+      "December 2022: Spindle bearing replacement, tool changer alignment",
+      "August 2022: Coolant system inspection, chip conveyor maintenance",
+      "March 2022: Lubrication system check, ball screw inspection"
+    ],
+    "inspection_notes": "Last inspection June 2023 - Machine in good operational condition. Coolant system functioning properly.",
+    "potential_issues": [
+      "Minor signs of wear on X-axis ball screw",
+      "Possible future replacement of way covers recommended"
+    ],
+    "recommended_repairs": [
+      "Monitor X-axis backlash for signs of progression"
+    ],
+    "compliance": "ISO 9001, AS9100",
+    "calibration_date": "06/2023",
+    "inspection_verified": true,
+    "gallery": [
+      "https://your-s3-bucket.s3.amazonaws.com/vf3-photo-1.jpg",
+      "https://your-s3-bucket.s3.amazonaws.com/vf3-photo-2.jpg",
+      "https://your-s3-bucket.s3.amazonaws.com/vf3-photo-3.jpg",
+      "https://your-s3-bucket.s3.amazonaws.com/vf3-photo-4.jpg"
+    ],
+    "additional_notes": [
+      "Used primarily for aluminum and stainless steel machining",
+      "No major crashes or collisions recorded",
+      "Good candidate for continued production or retrofit upgrades"
+    ],
+    "summary": "Haas VF-3 with low hours, high spec upgrades, and excellent service history.",
+    "created_at": "2024-03-15T12:00:00Z"
+  }
+]

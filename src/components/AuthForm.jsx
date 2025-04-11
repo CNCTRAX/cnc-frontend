@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
-// ✅ Pull API URL from .env
 const API = process.env.REACT_APP_API_URL;
 
 function AuthForm({ setToken }) {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,10 +14,13 @@ function AuthForm({ setToken }) {
   const [role, setRole] = useState("customer");
   const [message, setMessage] = useState("");
 
+  // ✅ Pull ?redirectTo=... from URL
+  const searchParams = new URLSearchParams(location.search);
+  const redirectTo = searchParams.get("redirectTo") || "/dashboard";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ Adjust routes based on backend setup
     const endpoint = isLogin
       ? "/login"
       : role === "technician"
@@ -37,7 +43,15 @@ function AuthForm({ setToken }) {
       if (isLogin && data.token) {
         localStorage.setItem("token", data.token);
         setToken(data.token);
-        setMessage("✅ Login successful!");
+
+        const decoded = jwtDecode(data.token);
+
+        // ✅ Redirect based on role + redirectTo param
+        if (decoded.role === "customer") {
+          navigate(redirectTo); // ⬅️ Redirect to original page
+        } else {
+          setMessage("Access denied. Please use the technician login.");
+        }
       } else if (!isLogin && response.status === 201) {
         setMessage("✅ Registration successful! Now log in.");
         setIsLogin(true);
