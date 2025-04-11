@@ -8,18 +8,19 @@ import ClientDashboard from './components/ClientDashboard';
 import TechDashboard from './components/TechDashboard';
 import ResetPassword from './components/ResetPassword';
 import SuccessLogic from './components/success-logic';
+import Header from './components/Header'; // ✅ import smart header
 import './index.css'; // ✅ Tailwind CSS and custom styles
 
 function App() {
   return (
-    // ✅ Updated background color to match your design (#151319)
     <div className="min-h-screen bg-[#151319] text-white w-full">
       <Router>
+        <Header /> {/* ✅ global header */}
         <Routes>
           {/* ✅ Public Search */}
           <Route path="/" element={<MachineSearch />} />
 
-          {/* ✅ Client Authentication */}
+          {/* ✅ Client Authentication (now simplified) */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
 
