@@ -20,22 +20,26 @@ const Header = () => {
           <img src={logo} alt="CNC TRAX Logo" className="w-32 sm:w-40" />
         </Link>
 
-        {/* ✅ Auth Action */}
-        {isLoggedIn ? (
-          <button
-            onClick={handleLogout}
-            className="text-red-400 hover:text-red-500 transition font-medium text-sm"
-          >
-            Log Out
-          </button>
-        ) : (
-          <Link
-            to="/login"
-            className="text-blue-400 hover:underline transition text-sm"
-          >
-            Log In
-          </Link>
-        )}
+        {/* ✅ Auth Actions */}
+        <div className="flex gap-4 items-center text-sm sm:text-base">
+          {isLoggedIn ? (
+            <button
+              onClick={handleLogout}
+              className="text-red-400 hover:text-red-500 transition font-medium"
+            >
+              Log Out
+            </button>
+          ) : (
+            <>
+              <Link to="/login" className="text-blue-400 hover:underline">
+                Log In
+              </Link>
+              <Link to="/signup" className="text-blue-400 hover:underline">
+                Sign Up
+              </Link>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );
