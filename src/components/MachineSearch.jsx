@@ -11,7 +11,7 @@ const MachineSearch = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  const { token } = useAuth(); // ✅ grab token from context
+  const { token } = useAuth();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -82,6 +82,7 @@ const MachineSearch = () => {
 
       <h2 className="text-xl font-semibold mb-6 text-center">Search CNC Machine</h2>
 
+      {/* ✅ Serial Input + Search */}
       <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-3xl mb-6">
         <input
           type="text"
@@ -100,6 +101,7 @@ const MachineSearch = () => {
 
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
+      {/* ✅ Results */}
       {machine && (
         <div className="flex flex-col md:flex-row md:items-center justify-between bg-[#1a1d24] p-6 rounded-lg w-full max-w-4xl mb-6 gap-4">
           <div>
@@ -118,13 +120,9 @@ const MachineSearch = () => {
         </div>
       )}
 
+      {/* ✅ Technician Access moved up */}
       <hr className="border-gray-600 w-full max-w-3xl mb-6" />
-      <div className="flex justify-center gap-8 mb-10">
-        <a href="/signup" className="text-blue-400 hover:underline">Sign Up</a>
-        <a href="/login" className="text-blue-400 hover:underline">Log In</a>
-      </div>
-
-      <div className="mt-16 flex flex-col items-center gap-3 text-blue-400">
+      <div className="mt-8 flex flex-col items-center gap-3 text-blue-400">
         <span className="text-gray-400">Technician Access</span>
         <div className="flex gap-8">
           <a href="/tech-login" className="hover:underline">Technician Login</a>
