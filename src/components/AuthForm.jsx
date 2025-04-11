@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
@@ -14,9 +14,8 @@ function AuthForm({ setToken }) {
   const [role, setRole] = useState("customer");
   const [message, setMessage] = useState("");
 
-  // ✅ Pull ?redirectTo=... from URL
   const searchParams = new URLSearchParams(location.search);
-  const redirectTo = searchParams.get("redirectTo") || "/dashboard";
+  const redirectTo = searchParams.get("redirectTo") || "/machine-search";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,16 +44,35 @@ function AuthForm({ setToken }) {
         setToken(data.token);
 
         const decoded = jwtDecode(data.token);
-
-        // ✅ Redirect based on role + redirectTo param
         if (decoded.role === "customer") {
-          navigate(redirectTo); // ⬅️ Redirect to original page
+          navigate(redirectTo); // ✅ go back to machine search or whatever redirectTo was
         } else {
           setMessage("Access denied. Please use the technician login.");
         }
       } else if (!isLogin && response.status === 201) {
-        setMessage("✅ Registration successful! Now log in.");
-        setIsLogin(true);
+        // ✅ Auto-login immediately after successful signup
+        const loginResponse = await fetch(`${API}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const loginData = await loginResponse.json();
+
+        if (loginResponse.ok && loginData.token) {
+          localStorage.setItem("token", loginData.token);
+          setToken(loginData.token);
+
+          const decoded = jwtDecode(loginData.token);
+          if (decoded.role === "customer") {
+            navigate(redirectTo); // ✅ send them right back to machine search with serial
+          } else {
+            setMessage("Access denied. Please use the technician login.");
+          }
+        } else {
+          setMessage("Sign up worked, but auto-login failed. Please log in manually.");
+          setIsLogin(true);
+        }
       } else {
         setMessage(data.error || "❌ Something went wrong.");
       }

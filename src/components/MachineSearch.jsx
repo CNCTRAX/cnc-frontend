@@ -19,7 +19,7 @@ const MachineSearch = () => {
     const params = new URLSearchParams(location.search);
     const serialFromUrl = params.get('serial');
     if (serialFromUrl) setSerialNumber(serialFromUrl);
-  }, []);
+  }, [location.search]); // ✅ included location.search
 
   const handleSearch = async () => {
     if (!serialNumber.trim()) {
