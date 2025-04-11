@@ -44,13 +44,16 @@ function AuthForm({ setToken }) {
         setToken(data.token);
 
         const decoded = jwtDecode(data.token);
+        console.log("✅ Login success. Redirecting to:", redirectTo);
         if (decoded.role === "customer") {
-          navigate(redirectTo); // ✅ go back to machine search or whatever redirectTo was
+          navigate(redirectTo); // ✅ Use redirectTo param
         } else {
           setMessage("Access denied. Please use the technician login.");
         }
       } else if (!isLogin && response.status === 201) {
-        // ✅ Auto-login immediately after successful signup
+        console.log("✅ Signup successful. Logging in...");
+
+        // Auto-login right after signup
         const loginResponse = await fetch(`${API}/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -64,13 +67,14 @@ function AuthForm({ setToken }) {
           setToken(loginData.token);
 
           const decoded = jwtDecode(loginData.token);
+          console.log("✅ Auto-login success. Redirecting to:", redirectTo);
           if (decoded.role === "customer") {
-            navigate(redirectTo); // ✅ send them right back to machine search with serial
+            navigate(redirectTo); // ✅ Go back to machine search with serial
           } else {
             setMessage("Access denied. Please use the technician login.");
           }
         } else {
-          setMessage("Sign up worked, but auto-login failed. Please log in manually.");
+          setMessage("Signup worked, but auto-login failed. Please log in manually.");
           setIsLogin(true);
         }
       } else {
@@ -137,7 +141,10 @@ function AuthForm({ setToken }) {
       <p className="text-green-400 mt-4">{message}</p>
 
       <button
-        onClick={() => setIsLogin(!isLogin)}
+        onClick={() => {
+          setIsLogin(!isLogin);
+          setMessage("");
+        }}
         className="mt-6 text-blue-400 hover:underline"
       >
         {isLogin ? "Need an account? Sign Up" : "Already have an account? Login"}
