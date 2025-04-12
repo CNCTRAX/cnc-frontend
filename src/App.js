@@ -8,35 +8,51 @@ import ClientDashboard from './components/ClientDashboard';
 import TechDashboard from './components/TechDashboard';
 import ResetPassword from './components/ResetPassword';
 import SuccessLogic from './components/success-logic';
-import Header from './components/Header'; // ✅ import smart header
-import './index.css'; // ✅ Tailwind CSS and custom styles
+import MyReports from './components/MyReports';
+import Header from './components/Header';
+import ProtectedRoute from './components/ProtectedRoute'; // ✅ Bonus: route guard
+import './index.css';
 
 function App() {
   return (
     <div className="min-h-screen bg-[#151319] text-white w-full">
       <Router>
-        <Header /> {/* ✅ global header */}
+        <Header />
         <Routes>
-          {/* ✅ Public Search */}
+          {/* ✅ Public */}
           <Route path="/" element={<MachineSearch />} />
-
-          {/* ✅ Client Authentication (now simplified) */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-
-          {/* ✅ Technician Authentication */}
           <Route path="/tech-login" element={<TechLogin />} />
           <Route path="/tech-signup" element={<TechSignup />} />
-
-          {/* ✅ Client and Technician Dashboards */}
-          <Route path="/dashboard" element={<ClientDashboard />} />
-          <Route path="/tech-dashboard" element={<TechDashboard />} />
-
-          {/* ✅ Password Reset */}
           <Route path="/reset-password" element={<ResetPassword />} />
-
-          {/* ✅ Stripe / Purchase Success Logic */}
           <Route path="/success-logic" element={<SuccessLogic />} />
+
+          {/* ✅ Protected Pages */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute role="customer">
+                <ClientDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tech-dashboard"
+            element={
+              <ProtectedRoute role="technician">
+                <TechDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-reports"
+            element={
+              <ProtectedRoute role="customer">
+                <MyReports />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Router>
     </div>

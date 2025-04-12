@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/cnctrax-logo.png';
-import { jwtDecode } from 'jwt-decode';
 
-// ✅ Pull API URL from .env
 const API = process.env.REACT_APP_API_URL;
 
 const TechLogin = () => {
@@ -13,75 +11,59 @@ const TechLogin = () => {
   const [error, setError] = useState('');
 
   const handleLogin = async () => {
-    if (!email.trim() || !password) {
-      setError('Please fill in both fields.');
+    if (!email || !password) {
+      setError('Please fill in both fields');
       return;
     }
 
     try {
-      const normalizedEmail = email.trim().toLowerCase();
-
-      const response = await fetch(`${API}/login`, {
+      const response = await fetch(`${API}/tech-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: normalizedEmail, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && data.token) {
         localStorage.setItem('token', data.token);
-
-        const decoded = jwtDecode(data.token);
-        console.log('Decoded JWT:', decoded);
-
-        // ✅ Only allow technician login through this
-        if (decoded.role === 'technician') {
-          navigate('/tech-dashboard');
-        } else {
-          setError('Access denied. Please use the client login.');
-        }
+        navigate('/tech-dashboard');
       } else {
-        console.error('Backend Error:', data.error);
-        setError(data.error || 'Login failed. Please try again.');
+        setError(data.error || 'Invalid credentials');
       }
     } catch (err) {
-      console.error('Tech Login error:', err);
-      setError('Failed to connect to the server. Please check your connection or URL.');
+      console.error('Login error:', err);
+      setError('Server error. Please try again.');
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#151319] flex items-center justify-center font-poppins">
+    <div className="min-h-screen bg-[#151319] flex items-center justify-center px-6 sm:px-8 py-[30px] font-poppins">
       <div className="w-full max-w-md bg-[#1c1b22] p-8 rounded-3xl shadow-xl">
         <img src={logo} alt="CNC TRAX Logo" className="w-32 mx-auto mb-8" />
-
-        <h2 className="text-white text-xl font-medium text-center mb-4">Technician Login</h2>
+        <h2 className="text-white text-xl font-medium text-center mb-2">Technician Login</h2>
         <p className="text-gray-400 text-center mb-6 text-sm">Log in to access your tools</p>
 
-        <form onSubmit={(e) => e.preventDefault()}>
-          <label className="block text-gray-400 text-sm mb-2">Email</label>
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
           <input
             type="email"
-            placeholder="Enter your email"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 rounded-lg bg-[#2a2930] text-white mb-6 focus:outline-none"
+            className="w-full p-3 rounded bg-[#2a2930] text-white"
           />
-
-          <label className="block text-gray-400 text-sm mb-2">Password</label>
           <input
             type="password"
-            placeholder="Enter your password"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 rounded-lg bg-[#2a2930] text-white mb-6 focus:outline-none"
+            className="w-full p-3 rounded bg-[#2a2930] text-white"
           />
 
           <button
             type="button"
             onClick={handleLogin}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-full font-medium"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full"
           >
             Continue
           </button>
