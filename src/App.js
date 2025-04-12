@@ -8,9 +8,9 @@ import ClientDashboard from './components/ClientDashboard';
 import TechDashboard from './components/TechDashboard';
 import ResetPassword from './components/ResetPassword';
 import SuccessLogic from './components/success-logic';
-import MyReports from './components/MyReports';
+import MachineReport from './components/MachineReport'; // ✅ newly added
 import Header from './components/Header';
-import ProtectedRoute from './components/ProtectedRoute'; // ✅ Bonus: route guard
+import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
       <Router>
         <Header />
         <Routes>
-          {/* ✅ Public */}
+          {/* ✅ Public Routes */}
           <Route path="/" element={<MachineSearch />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -28,12 +28,20 @@ function App() {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/success-logic" element={<SuccessLogic />} />
 
-          {/* ✅ Protected Pages */}
+          {/* ✅ Protected Routes */}
           <Route
             path="/dashboard"
             element={
               <ProtectedRoute role="customer">
                 <ClientDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/machine-report"
+            element={
+              <ProtectedRoute role="customer">
+                <MachineReport />
               </ProtectedRoute>
             }
           />
@@ -45,18 +53,10 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/my-reports"
-            element={
-              <ProtectedRoute role="customer">
-                <MyReports />
-              </ProtectedRoute>
-            }
-          />
         </Routes>
       </Router>
     </div>
   );
 }
 
-export default App;// trigger deploy
+export default App;
