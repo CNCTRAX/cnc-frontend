@@ -10,7 +10,7 @@ import ResetPassword from './components/ResetPassword';
 import SuccessLogic from './components/success-logic';
 import MachineReport from './components/MachineReport';
 import PurchaseReport from './components/PurchaseReport';
-import MyReports from './components/MyReports'; // ✅ NEW
+import MyReports from './components/MyReports.jsx'; // ✅ Fixed extension
 import Header from './components/Header';
 import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
@@ -30,7 +30,7 @@ function App() {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/success-logic" element={<SuccessLogic />} />
 
-          {/* ✅ Customer Protected Routes */}
+          {/* ✅ Protected Routes */}
           <Route
             path="/dashboard"
             element={
@@ -63,8 +63,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          {/* ✅ Technician Protected Route */}
           <Route
             path="/tech-dashboard"
             element={
