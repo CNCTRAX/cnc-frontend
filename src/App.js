@@ -9,8 +9,7 @@ import TechDashboard from './components/TechDashboard';
 import ResetPassword from './components/ResetPassword';
 import SuccessLogic from './components/success-logic';
 import MachineReport from './components/MachineReport';
-import MyReports from './components/MyReports';
-import PurchaseReport from './components/PurchaseReport';
+import PurchaseReport from './components/PurchaseReport'; // ✅
 import Header from './components/Header';
 import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
@@ -30,7 +29,7 @@ function App() {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/success-logic" element={<SuccessLogic />} />
 
-          {/* ✅ Customer-Protected Routes */}
+          {/* ✅ Protected Routes */}
           <Route
             path="/dashboard"
             element={
@@ -48,14 +47,6 @@ function App() {
             }
           />
           <Route
-            path="/my-reports"
-            element={
-              <ProtectedRoute role="customer">
-                <MyReports />
-              </ProtectedRoute>
-            }
-          />
-          <Route
             path="/purchase-report"
             element={
               <ProtectedRoute role="customer">
@@ -63,8 +54,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          {/* ✅ Technician-Protected Route */}
           <Route
             path="/tech-dashboard"
             element={
