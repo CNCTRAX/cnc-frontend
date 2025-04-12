@@ -8,7 +8,8 @@ import ClientDashboard from './components/ClientDashboard';
 import TechDashboard from './components/TechDashboard';
 import ResetPassword from './components/ResetPassword';
 import SuccessLogic from './components/success-logic';
-import MachineReport from './components/MachineReport'; // ✅ newly added
+import MachineReport from './components/MachineReport';
+import MyReports from './components/MyReports'; // ✅ new
 import Header from './components/Header';
 import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
@@ -42,6 +43,14 @@ function App() {
             element={
               <ProtectedRoute role="customer">
                 <MachineReport />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-reports"
+            element={
+              <ProtectedRoute role="customer">
+                <MyReports />
               </ProtectedRoute>
             }
           />
