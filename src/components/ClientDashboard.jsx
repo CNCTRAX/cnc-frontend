@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
 import logo from '../assets/cnctrax-logo.png';
-
-const API = process.env.REACT_APP_API_URL;
+import { API } from '../config';
+import { jwtDecode } from 'jwt-decode';
 
 const ClientDashboard = () => {
   const navigate = useNavigate();
@@ -17,11 +16,10 @@ const ClientDashboard = () => {
     if (storedToken) {
       try {
         const decoded = jwtDecode(storedToken);
+        if (decoded.role !== 'customer') throw new Error('Unauthorized');
         setClientName(decoded.full_name || 'User');
         setUserId(decoded.user_id);
-        setProfileImage(decoded.profile_image_url 
-          ? `${API}${decoded.profile_image_url}` 
-          : null);
+        setProfileImage(decoded.profile_image_url ? `${API}${decoded.profile_image_url}` : null);
         setToken(storedToken);
       } catch (err) {
         console.error('Invalid token:', err);
@@ -47,7 +45,7 @@ const ClientDashboard = () => {
     try {
       const response = await fetch(`${API}/upload-profile/${userId}`, {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
@@ -71,7 +69,7 @@ const ClientDashboard = () => {
         <img src={logo} alt="CNC TRAX Logo" className="w-28 object-contain" />
       </div>
 
-      {/* Logout Icon */}
+      {/* Logout */}
       <div className="absolute top-6 right-8 cursor-pointer" onClick={handleLogout}>
         <div className="w-12 h-12 rounded-full bg-gray-400 flex items-center justify-center text-2xl hover:bg-gray-500 transition">
           👤
@@ -80,27 +78,28 @@ const ClientDashboard = () => {
 
       {/* Left - Profile */}
       <div className="lg:w-1/3 w-full bg-[#1c1b22] flex flex-col items-center justify-center p-8 shadow-lg min-h-screen">
-        <div className="relative">
+        <div className="relative text-center">
+          <label htmlFor="profileUpload" className="cursor-pointer">
+            {profileImage ? (
+              <img
+                src={profileImage}
+                alt="Profile"
+                className="w-32 h-32 rounded-full mb-6 object-cover border-2 border-white mx-auto"
+              />
+            ) : (
+              <div className="w-32 h-32 rounded-full bg-gray-400 mb-6 flex items-center justify-center text-5xl mx-auto">
+                👤
+              </div>
+            )}
+            <p className="text-blue-400 text-sm hover:underline">Change Image</p>
+          </label>
           <input
             type="file"
-            accept="image/*"
             id="profileUpload"
+            accept="image/*"
             onChange={handleAutoUpload}
             className="hidden"
           />
-          <div className="cursor-pointer" onClick={() => document.getElementById('profileUpload').click()}>
-            {profileImage ? (
-              <img src={profileImage} alt="Profile" className="w-32 h-32 rounded-full mb-6 object-cover border-2 border-white" />
-            ) : (
-              <div className="w-32 h-32 rounded-full bg-gray-400 mb-6 flex items-center justify-center text-5xl">👤</div>
-            )}
-          </div>
-          <p
-            className="text-blue-400 text-sm text-center cursor-pointer hover:underline"
-            onClick={() => document.getElementById('profileUpload').click()}
-          >
-            Change Image
-          </p>
         </div>
         <h2 className="text-2xl font-semibold">{clientName}</h2>
         <p className="text-gray-400 mt-2">Premium User</p>
@@ -141,19 +140,28 @@ const ClientDashboard = () => {
                 </tr>
               </thead>
               <tbody>
+                {/* Static rows for now — replace with dynamic report data later */}
                 <tr className="border-t border-gray-700 hover:bg-[#2a2930]">
                   <td className="py-4">ABC12345</td>
                   <td>Haas VF-2</td>
                   <td>2019</td>
-                  <td><span className="bg-green-600 text-white px-3 py-1 rounded-full">Available</span></td>
-                  <td><button className="text-blue-400 hover:underline">View Report</button></td>
+                  <td>
+                    <span className="bg-green-600 text-white px-3 py-1 rounded-full">Available</span>
+                  </td>
+                  <td>
+                    <button className="text-blue-400 hover:underline">View Report</button>
+                  </td>
                 </tr>
                 <tr className="border-t border-gray-700 hover:bg-[#2a2930]">
                   <td className="py-4">XYZ98765</td>
                   <td>Mazak 300</td>
                   <td>2020</td>
-                  <td><span className="bg-yellow-500 text-black px-3 py-1 rounded-full">Pending</span></td>
-                  <td><button className="text-blue-400 hover:underline">Purchase</button></td>
+                  <td>
+                    <span className="bg-yellow-500 text-black px-3 py-1 rounded-full">Pending</span>
+                  </td>
+                  <td>
+                    <button className="text-blue-400 hover:underline">Purchase</button>
+                  </td>
                 </tr>
               </tbody>
             </table>

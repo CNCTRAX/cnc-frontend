@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/cnctrax-logo.png';
-
-const API = process.env.REACT_APP_API_URL;
+import { API } from '../config';
 
 const TechSignup = () => {
   const navigate = useNavigate();
@@ -11,8 +10,10 @@ const TechSignup = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSignup = async () => {
-    if (!fullName || !email || !password) {
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
+    if (!fullName.trim() || !email.trim() || !password.trim()) {
       setError('All fields are required');
       return;
     }
@@ -44,7 +45,7 @@ const TechSignup = () => {
         <h2 className="text-white text-xl font-medium text-center mb-2">Technician Sign Up</h2>
         <p className="text-gray-400 text-center mb-6 text-sm">Join the technician team!</p>
 
-        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+        <form onSubmit={handleSignup} className="space-y-4">
           <input
             type="text"
             placeholder="Full Name"
@@ -68,8 +69,7 @@ const TechSignup = () => {
           />
 
           <button
-            type="button"
-            onClick={handleSignup}
+            type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full"
           >
             Continue

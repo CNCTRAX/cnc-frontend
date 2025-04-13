@@ -4,7 +4,12 @@ import AuthForm from '../components/AuthForm';
 
 const Signup = ({ setToken }) => {
   const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get('redirectTo') || '/machine-search';
+
+  // Prevent open redirect to external domains
+  const rawRedirect = searchParams.get('redirectTo');
+  const redirectTo = rawRedirect && rawRedirect.startsWith('/')
+    ? rawRedirect
+    : '/machine-search';
 
   return <AuthForm setToken={setToken} initialMode="signup" redirectTo={redirectTo} />;
 };

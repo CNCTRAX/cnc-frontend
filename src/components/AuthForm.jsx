@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import logo from "../assets/cnctrax-logo.png";
-
-const API = process.env.REACT_APP_API_URL;
+import { API } from "../config";
 
 function AuthForm({ setToken, initialMode = 'login', redirectTo = '/machine-search' }) {
   const navigate = useNavigate();
@@ -13,72 +12,71 @@ function AuthForm({ setToken, initialMode = 'login', redirectTo = '/machine-sear
   const [fullName, setFullName] = useState("");
   const [role, setRole] = useState("customer");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+      try {
+        const decoded = jwtDecode(storedToken);
+        if (decoded.role === 'customer') navigate(redirectTo);
+      } catch {
+        localStorage.removeItem('token');
+      }
+    }
+  }, [navigate, redirectTo]);
+
+  const performLogin = async () => {
+    const loginRes = await fetch(`${API}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const loginData = await loginRes.json();
+
+    if (loginRes.ok && loginData.token) {
+      localStorage.setItem("token", loginData.token);
+      setToken(loginData.token);
+      const decoded = jwtDecode(loginData.token);
+
+      if (decoded.role === "customer") {
+        navigate(redirectTo);
+      } else {
+        setMessage("Access denied. Please use the technician login.");
+      }
+      return true;
+    } else {
+      setMessage(loginData.error || "❌ Login failed.");
+      return false;
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
+    setLoading(true);
 
-    const endpoint = isLogin
-      ? "/login"
-      : role === "technician"
-      ? "/signup-technician"
-      : "/signup-customer";
-
-    const body = isLogin
-      ? { email, password }
-      : { full_name: fullName, email, password };
-
-    try {
+    if (isLogin) {
+      await performLogin();
+    } else {
+      const endpoint = role === "technician" ? "/signup-technician" : "/signup-customer";
       const response = await fetch(`${API}${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ full_name: fullName, email, password }),
       });
 
       const data = await response.json();
 
-      if (isLogin && data.token) {
-        localStorage.setItem("token", data.token);
-        setToken(data.token);
-
-        const decoded = jwtDecode(data.token);
-        console.log("✅ Login success. Redirecting to:", redirectTo);
-        if (decoded.role === "customer") {
-          navigate(redirectTo);
-        } else {
-          setMessage("Access denied. Please use the technician login.");
-        }
-      } else if (!isLogin && response.status === 201) {
-        console.log("✅ Signup successful. Logging in...");
-
-        const loginResponse = await fetch(`${API}/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        });
-
-        const loginData = await loginResponse.json();
-
-        if (loginResponse.ok && loginData.token) {
-          localStorage.setItem("token", loginData.token);
-          setToken(loginData.token);
-
-          const decoded = jwtDecode(loginData.token);
-          console.log("✅ Auto-login success. Redirecting to:", redirectTo);
-          if (decoded.role === "customer") {
-            navigate(redirectTo);
-          } else {
-            setMessage("Access denied. Please use the technician login.");
-          }
-        } else {
-          setMessage("Signup worked, but auto-login failed. Please log in manually.");
-          setIsLogin(true);
-        }
+      if (response.status === 201) {
+        const loginSuccess = await performLogin();
+        if (!loginSuccess) setIsLogin(true);
       } else {
-        setMessage(data.error || "❌ Something went wrong.");
+        setMessage(data.error || "❌ Signup failed.");
       }
-    } catch (err) {
-      setMessage("❌ Error: " + err.message);
     }
+
+    setLoading(false);
   };
 
   return (
@@ -136,9 +134,10 @@ function AuthForm({ setToken, initialMode = 'login', redirectTo = '/machine-sear
 
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-full font-medium"
+            disabled={loading}
+            className={`w-full ${loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'} text-white py-3 rounded-full font-medium`}
           >
-            {isLogin ? "Login" : "Continue"}
+            {loading ? 'Processing...' : isLogin ? 'Login' : 'Continue'}
           </button>
         </form>
 

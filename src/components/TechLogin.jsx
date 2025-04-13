@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/cnctrax-logo.png';
-
-const API = process.env.REACT_APP_API_URL;
+import { API } from '../config';
 
 const TechLogin = () => {
   const navigate = useNavigate();
@@ -10,8 +9,10 @@ const TechLogin = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = async () => {
-    if (!email || !password) {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    if (!email.trim() || !password.trim()) {
       setError('Please fill in both fields');
       return;
     }
@@ -27,6 +28,8 @@ const TechLogin = () => {
 
       if (response.ok && data.token) {
         localStorage.setItem('token', data.token);
+        // Optionally store user data if returned
+        // localStorage.setItem('user', JSON.stringify(data.user));
         navigate('/tech-dashboard');
       } else {
         setError(data.error || 'Invalid credentials');
@@ -44,7 +47,7 @@ const TechLogin = () => {
         <h2 className="text-white text-xl font-medium text-center mb-2">Technician Login</h2>
         <p className="text-gray-400 text-center mb-6 text-sm">Log in to access your tools</p>
 
-        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4">
           <input
             type="email"
             placeholder="Email"
@@ -61,8 +64,7 @@ const TechLogin = () => {
           />
 
           <button
-            type="button"
-            onClick={handleLogin}
+            type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full"
           >
             Continue

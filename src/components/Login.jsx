@@ -4,7 +4,12 @@ import AuthForm from '../components/AuthForm';
 
 const Login = ({ setToken }) => {
   const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get('redirectTo') || '/machine-search';
+
+  // Sanitize redirectTo to prevent open redirect vulnerability
+  const rawRedirect = searchParams.get('redirectTo');
+  const redirectTo = rawRedirect && rawRedirect.startsWith('/')
+    ? rawRedirect
+    : '/machine-search';
 
   return <AuthForm setToken={setToken} initialMode="login" redirectTo={redirectTo} />;
 };

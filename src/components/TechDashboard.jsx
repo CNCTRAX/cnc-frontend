@@ -2,8 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import logo from '../assets/cnctrax-logo.png';
-
-const API = process.env.REACT_APP_API_URL;
+import { API } from '../config';
 
 const TechDashboard = () => {
   const navigate = useNavigate();
@@ -12,7 +11,7 @@ const TechDashboard = () => {
   const [editingId, setEditingId] = useState(null);
   const token = localStorage.getItem('token');
 
-  // ✅ Fetch Machines from API
+  // ✅ Fetch machines
   const fetchMachines = useCallback(async () => {
     try {
       const res = await fetch(`${API}/machines`, {
@@ -25,14 +24,14 @@ const TechDashboard = () => {
     }
   }, [token]);
 
-  // ✅ Auth Check and Fetch on Load
+  // ✅ Check auth + fetch on mount
   useEffect(() => {
     const checkAuth = () => {
       if (!token) return navigate('/tech-login');
       try {
         const decoded = jwtDecode(token);
         if (decoded.role !== 'technician') navigate('/tech-login');
-      } catch (err) {
+      } catch {
         navigate('/tech-login');
       }
     };
@@ -40,8 +39,14 @@ const TechDashboard = () => {
     fetchMachines();
   }, [navigate, token, fetchMachines]);
 
-  // ✅ Handle Machine Add / Edit
+  // ✅ Handle add/edit machine
   const handleSubmit = async () => {
+    const { model, manufacturer, year, serial_number } = form;
+    if (!model || !manufacturer || !year || !serial_number) {
+      alert('Please fill in all fields');
+      return;
+    }
+
     const url = editingId ? `${API}/machines/${editingId}` : `${API}/machines`;
     const method = editingId ? 'PUT' : 'POST';
 
@@ -65,6 +70,7 @@ const TechDashboard = () => {
   const handleEdit = (machine) => {
     setForm(machine);
     setEditingId(machine.id);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleLogout = () => {
@@ -81,7 +87,10 @@ const TechDashboard = () => {
       <h2 className="text-xl font-semibold mb-4">Active Machines</h2>
       <ul className="mb-8 w-full max-w-2xl">
         {machines.map((machine) => (
-          <li key={machine.id} className="bg-[#2a2930] p-4 rounded-lg mb-4 flex justify-between">
+          <li
+            key={machine.id}
+            className="bg-[#2a2930] p-4 rounded-lg mb-4 flex justify-between items-start"
+          >
             <div>
               <p><strong>Model:</strong> {machine.model}</p>
               <p><strong>Manufacturer:</strong> {machine.manufacturer}</p>
